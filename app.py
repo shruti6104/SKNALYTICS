@@ -3,6 +3,7 @@ import joblib
 import re
 import nltk
 import pandas as pd
+import os
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 from io import BytesIO
@@ -37,9 +38,12 @@ except LookupError:
 
 lemmatizer = WordNetLemmatizer()
 
-# === Load Model ===
-model = joblib.load("model/fake_review_model.pkl")
-vectorizer = joblib.load("model/vectorizer.pkl")
+# === Load Model === ✅ FIXED
+model_path = os.path.join(os.path.dirname(__file__), "model", "fake_review_model.pkl")
+vectorizer_path = os.path.join(os.path.dirname(__file__), "model", "vectorizer.pkl")
+
+model = joblib.load(model_path)
+vectorizer = joblib.load(vectorizer_path)
 
 # === Preprocessing ===
 def clean_text(text):
