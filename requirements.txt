@@ -1,4 +1,6 @@
 streamlit
+transformers
+torch
 joblib
 nltk
 scikit-learn
