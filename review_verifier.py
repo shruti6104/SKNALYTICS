@@ -1,3 +1,4 @@
+import os
 import joblib
 import re
 import nltk
@@ -17,10 +18,15 @@ except LookupError:
     nltk.download('wordnet')
     nltk.download('omw-1.4')
 
-# === Load Models ===
-model = joblib.load("fake_review_model.pkl")
-vectorizer = joblib.load("vectorizer.pkl")
 lemmatizer = WordNetLemmatizer()
+
+# === Load Models with Correct Path ===
+base_dir = os.path.dirname(__file__)
+model_path = os.path.join(base_dir, "model", "fake_review_model.pkl")
+vectorizer_path = os.path.join(base_dir, "model", "vectorizer.pkl")
+
+model = joblib.load(model_path)
+vectorizer = joblib.load(vectorizer_path)
 
 # === Text Preprocessing ===
 def clean_text(text):
@@ -51,3 +57,4 @@ def verify_review(text):
         "confidence": round(confidence * 100, 2),
         "keywords": keywords
     }
+
