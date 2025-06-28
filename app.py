@@ -7,7 +7,6 @@ import os
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 from io import BytesIO
-from fpdf import FPDF
 
 # === Custom Modules ===
 from product_compare import get_product_comparison
@@ -38,12 +37,16 @@ except LookupError:
 
 lemmatizer = WordNetLemmatizer()
 
-# === Load Model === ✅ FIXED
+# === Load Model and Vectorizer from model folder ===
 model_path = os.path.join(os.path.dirname(__file__), "model", "fake_review_model.pkl")
 vectorizer_path = os.path.join(os.path.dirname(__file__), "model", "vectorizer.pkl")
 
-model = joblib.load(model_path)
-vectorizer = joblib.load(vectorizer_path)
+try:
+    model = joblib.load(model_path)
+    vectorizer = joblib.load(vectorizer_path)
+except Exception as e:
+    st.error(f"❌ Failed to load model/vectorizer: {e}")
+    st.stop()
 
 # === Preprocessing ===
 def clean_text(text):
