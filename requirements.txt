@@ -1,0 +1,9 @@
+streamlit
+joblib
+nltk
+scikit-learn
+pandas
+fpdf
+matplotlib
+beautifulsoup4
+requests
