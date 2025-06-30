@@ -1,31 +1,23 @@
-import requests
-from bs4 import BeautifulSoup
+headers = {
+    "User-Agent": "Mozilla/5.0",
+    "Accept-Language": "en-US,en;q=0.9",
+}
 
-def scrape_amazon(product_name):
-    headers = {
-        "User-Agent": "Mozilla/5.0"
-    }
+url = f"https://www.amazon.in/s?k={product_query.replace(' ', '+')}"
+response = requests.get(url, headers=headers)
 
-    query = product_name.replace(" ", "+")
-    url = f"https://www.amazon.in/s?k={query}"
-
-    response = requests.get(url, headers=headers)
+if response.status_code == 200:
     soup = BeautifulSoup(response.content, "html.parser")
+    titles = soup.select("span.a-text-normal")
+    prices = soup.select("span.a-price-whole")
+    ratings = soup.select("span.a-icon-alt")
 
-    results = []
-    for item in soup.select(".s-result-item")[:5]:
-        title = item.select_one("h2 span")
-        price = item.select_one(".a-price-whole")
-        rating = item.select_one(".a-icon-alt")
-        link = item.select_one("h2 a")
-
-        if title and price and rating and link:
-            results.append({
-                "Platform": "Amazon",
-                "Product": title.text.strip(),
-                "Price (₹)": price.text.strip(),
-                "Rating": rating.text.strip(),
-                "URL": "https://www.amazon.in" + link['href']
-            })
-
-    return results
+    # Return first result
+    product = {
+        "Platform": "Amazon",
+        "Product Name": titles[0].text.strip(),
+        "Price (₹)": prices[0].text.strip(),
+        "Rating": ratings[0].text.strip().split()[0],
+        "Top Review": "Not available via scraper"
+    }
+    return [product]
